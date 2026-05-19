@@ -6,7 +6,7 @@ import { createUserWithEmailAndPasswordInput, type CreateUserWithEmailAndPasswor
 
 class UserService {
     private async getUserByEmail(email: string) {
-        const result = await db.select().from(usersTable).where(eq(usersTable, email));
+        const result = await db.select().from(usersTable).where(eq(usersTable.email, email));
 
         if (!result || result.length === 0) return null;
 
