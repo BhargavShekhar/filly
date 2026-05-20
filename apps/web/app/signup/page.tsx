@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { SignupForm } from "~/components/signup-form"
-import { trpc } from "~/trpc/client"
+import { useSignup } from "~/hooks/api/auth"
 
 type SignupFormValue = {
   name: string
@@ -12,7 +12,7 @@ type SignupFormValue = {
 }
 
 export default function Page() {
-  const { mutateAsync: createUserWithEmailAndPassword } = trpc.auth.createUserWithEmailAndPassword.useMutation();
+  const { createUserWithEmailAndPasswordAsync } = useSignup();
 
   const form = useForm({
     defaultValues: {
@@ -24,7 +24,7 @@ export default function Page() {
   })
 
   const onSubmit = async ({ email, name, password }: SignupFormValue) => {
-    const { id } = await createUserWithEmailAndPassword({
+    const { id } = await createUserWithEmailAndPasswordAsync({
       email,
       fullName: name,
       password
