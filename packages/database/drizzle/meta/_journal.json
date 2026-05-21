@@ -15,6 +15,20 @@
       "when": 1779183220470,
       "tag": "0001_friendly_darkhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779358662244,
+      "tag": "0002_pink_arachne",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779358748063,
+      "tag": "0003_fat_iron_fist",
+      "breakpoints": true
     }
   ]
 }
