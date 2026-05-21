@@ -6,7 +6,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { usersTable } from "./user";
 
-export const formTable = pgTable("forms", {
+export const formsTable = pgTable("forms", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     title: varchar("title", { length: 55 }).notNull(),
