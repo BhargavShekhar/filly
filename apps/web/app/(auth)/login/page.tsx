@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form"
 import { LoginForm } from "~/components/login-form"
 import { useSignin } from "~/hooks/api/auth"
+import { useRouter } from 'next/navigation'
 
 type LoginFormValue = {
   email: string
@@ -10,6 +11,8 @@ type LoginFormValue = {
 }
 
 export default function Page() {
+  const router = useRouter();
+
   const { signInUserWithEmailAndPasswordAsync } = useSignin();
 
   const form = useForm({
@@ -25,7 +28,7 @@ export default function Page() {
       password
     })
 
-    console.log(`user logged in with id:${id}`);
+    router.replace("/dashboard");
   }
 
   return (

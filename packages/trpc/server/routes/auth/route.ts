@@ -1,10 +1,12 @@
 import { userService } from "../../services";
 import { publicProcedure, router } from "../../trpc";
-import { setAuthenticationCookie } from "../../utils/cookie";
+import { getAuthneticationCookie, setAuthenticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
+  getLoggedInUserInfoInput,
+  getLoggedInUserInfoOutput,
   signInUserWithEmailAndPasswordInput,
   signInUserWithEmailAndPasswordOutput
 } from "./model";
@@ -54,6 +56,30 @@ export const authRouter = router({
 
       return {
         id
+      }
+    }),
+
+  getLoggedInUserInfo: publicProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/getLoggedInUserInfo"),
+        tags: TAGS
+      }
+    })
+    .input(getLoggedInUserInfoInput)
+    .output(getLoggedInUserInfoOutput)
+    .query(async ({ ctx }) => {
+      const userToken = getAuthneticationCookie(ctx);
+
+      if (!userToken) throw new Error("User is not logged in");
+
+      const { email, fullName, id, profileImage } = await userService.verifyAndDecodeUserToken(userToken);
+      return {
+        id,
+        email,
+        fullName,
+        profileImageUrl: profileImage
       }
     })
 });

@@ -1,6 +1,8 @@
 import { trpc } from "~/trpc/client";
 
 export const useSignup = () => {
+    const utils = trpc.useUtils();
+
     const {
         mutateAsync: createUserWithEmailAndPasswordAsync,
         mutate: createUserWithEmailAndPassword,
@@ -10,10 +12,11 @@ export const useSignup = () => {
         isIdle,
         isSuccess,
         status
-    } = trpc
-        .auth
-        .createUserWithEmailAndPassword
-        .useMutation();
+    } = trpc.auth.createUserWithEmailAndPassword.useMutation({
+        onSuccess: async () => {
+            await utils.auth.getLoggedInUserInfo.invalidate();
+        }
+    });
 
     return {
         createUserWithEmailAndPassword,
@@ -28,6 +31,8 @@ export const useSignup = () => {
 }
 
 export const useSignin = () => {
+    const utils = trpc.useUtils();
+
     const {
         mutateAsync: signInUserWithEmailAndPasswordAsync,
         mutate: signInUserWithEmailAndPassword,
@@ -37,10 +42,11 @@ export const useSignin = () => {
         isIdle,
         isSuccess,
         status
-    } = trpc
-        .auth
-        .signInUserWithEmailAndPassword
-        .useMutation();
+    } = trpc.auth.signInUserWithEmailAndPassword.useMutation({
+        onSuccess: async () => {
+            await utils.auth.getLoggedInUserInfo.invalidate(); // catch invalidate
+        }
+    });
 
     return {
         signInUserWithEmailAndPassword,
@@ -50,6 +56,26 @@ export const useSignin = () => {
         isError,
         isIdle,
         isSuccess,
+        status
+    }
+}
+
+export const useUser = () => {
+    const {
+        data: user,
+        error,
+        isFetched,
+        isFetching,
+        isLoading,
+        status
+    } = trpc.auth.getLoggedInUserInfo.useQuery();
+
+    return {
+        user,
+        error,
+        isFetched,
+        isFetching,
+        isLoading,
         status
     }
 }

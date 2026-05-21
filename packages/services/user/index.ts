@@ -28,7 +28,29 @@ class UserService {
 
         const token = JWT.sign({ id }, env.JWT_SECRET)
 
-        return { token };
+        return { token }
+    }
+
+    private async verifyUserToken(token: string): Promise<GenerateUserTokenPayloadType> {
+        try {
+            const payload = JWT.verify(token, env.JWT_SECRET) as GenerateUserTokenPayloadType;
+            return payload;
+        } catch (error) {
+            throw new Error("Invalid user token")
+        }
+    }
+
+    private async getUserInfoById(id: string) {
+        const user = await db.select({
+            id: usersTable.id,
+            fullName: usersTable.fullName,
+            email: usersTable.email,
+            profileImage: usersTable.profileImageUrl
+        }).from(usersTable).where(eq(usersTable.id, id));
+
+        if (!user || user.length === 0) throw new Error("Invalid user id");
+
+        return user[0]!;
     }
 
     public async createUserWithEmailAndPassword(payload: CreateUserWithEmailAndPasswordType) {
@@ -81,6 +103,12 @@ class UserService {
             id: userId,
             token
         }
+    }
+
+    public async verifyAndDecodeUserToken(token: string) {
+        const { id } = await this.verifyUserToken(token);
+        const userInfo = await this.getUserInfoById(id);
+        return { ...userInfo }
     }
 }
 

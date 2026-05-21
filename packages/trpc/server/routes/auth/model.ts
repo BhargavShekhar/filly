@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createUserWithEmailAndPasswordInputModel = z.object({
     fullName: z.string().describe("Name of the User"),
     email: z.email().describe("Email of the user"),
-    password: z.string().describe("Password of the user")
+    password: z.string().describe("Password of the user"),
 })
 
 export const createUserWithEmailAndPasswordOutputModel = z.object({
@@ -17,4 +17,13 @@ export const signInUserWithEmailAndPasswordInput = z.object({
 
 export const signInUserWithEmailAndPasswordOutput = z.object({
     id: z.string().describe("Id of the user created"),
+})
+
+export const getLoggedInUserInfoInput = z.undefined()
+
+export const getLoggedInUserInfoOutput = z.object({
+    id: z.string().describe("Id of the user created"),
+    fullName: z.string().describe("Name of the User"),
+    email: z.email().describe("Email of the user"),
+    profileImageUrl: z.string().optional().nullable().describe("Profile image url of the user"),
 })
