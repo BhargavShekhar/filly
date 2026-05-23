@@ -1,5 +1,5 @@
 import { userService } from "../../services";
-import { publicProcedure, router } from "../../trpc";
+import { authenticatedProcedure, publicProcedure, router } from "../../trpc";
 import { getAuthneticationCookie, setAuthenticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
@@ -59,7 +59,7 @@ export const authRouter = router({
       }
     }),
 
-  getLoggedInUserInfo: publicProcedure
+  getLoggedInUserInfo: authenticatedProcedure
     .meta({
       openapi: {
         method: "POST",
@@ -70,11 +70,7 @@ export const authRouter = router({
     .input(getLoggedInUserInfoInput)
     .output(getLoggedInUserInfoOutput)
     .query(async ({ ctx }) => {
-      const userToken = getAuthneticationCookie(ctx);
-
-      if (!userToken) throw new Error("User is not logged in");
-
-      const { email, fullName, id, profileImage } = await userService.verifyAndDecodeUserToken(userToken);
+      const { id, email, fullName, profileImage } = await userService.getUserInfoById(ctx.user.id);
       return {
         id,
         email,
