@@ -1,6 +1,6 @@
 import { userService } from "../../services";
 import { authenticatedProcedure, publicProcedure, router } from "../../trpc";
-import { getAuthneticationCookie, setAuthenticationCookie } from "../../utils/cookie";
+import { setAuthenticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
   createUserWithEmailAndPasswordInputModel,
@@ -64,7 +64,8 @@ export const authRouter = router({
       openapi: {
         method: "POST",
         path: getPath("/getLoggedInUserInfo"),
-        tags: TAGS
+        tags: TAGS,
+        protect: true
       }
     })
     .input(getLoggedInUserInfoInput)
