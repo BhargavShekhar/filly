@@ -1,7 +1,9 @@
-import { db } from "@repo/database";
+import { db, eq } from "@repo/database";
 import { formsTable } from "@repo/database/models/form";
 import {
     createFormInput,
+    listFormsByUserIdInput,
+    type ListFormsByUserIdType,
     type CreateFormInputType,
 } from "./model";
 
@@ -19,13 +21,23 @@ class FormService {
             throw new Error("Something went wrong while creating form");
         }
 
-        const formId = formInsertResult[0].id;
-
         return {
-            id: formId,
-            title,
-            description,
+            id: formInsertResult[0].id
         };
+    }
+
+    public async listFormsByUserId(payload: ListFormsByUserIdType) {
+        const { userId } = await listFormsByUserIdInput.parseAsync(payload);
+
+        const forms = await db.select({
+            id: formsTable.id,
+            title: formsTable.title,
+            description: formsTable.description,
+            createdAt: formsTable.createdAt,
+            updatedAt: formsTable.updatedAt
+        }).from(formsTable).where(eq(formsTable.createdBy, userId))
+
+        return forms;
     }
 }
 

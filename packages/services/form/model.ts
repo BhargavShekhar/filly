@@ -6,4 +6,9 @@ export const createFormInput = z.object({
     createdBy: z.uuid().describe("UUID of the user creating the form"),
 });
 
+export const listFormsByUserIdInput = z.object({
+    userId: z.uuid().describe("UUID of the user")
+})
+
 export type CreateFormInputType = z.infer<typeof createFormInput>;
+export type ListFormsByUserIdType = z.infer<typeof listFormsByUserIdInput>;
