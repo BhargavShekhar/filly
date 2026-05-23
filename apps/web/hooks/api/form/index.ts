@@ -31,3 +31,27 @@ export const useCreateForm = () => {
         isPending,
     }
 }
+
+export const useListForms = () => {
+    const {
+        data: forms,
+        error,
+        isError,
+        isLoading,
+        isPending,
+        status,
+        refetch,
+    } = trpc.form.listForms.useQuery(undefined, {
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    return {
+        forms: forms ?? [],
+        error,
+        isError,
+        isLoading,
+        isPending,
+        status,
+        refetch,
+    }
+}
